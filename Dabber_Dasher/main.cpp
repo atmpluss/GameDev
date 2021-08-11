@@ -60,7 +60,7 @@ int main()
         nebArray[i].rec.y =0.0;
         nebArray[i].rec.width =(float)nebula.width/8;
         nebArray[i].rec.height =(float)nebula.height/8;
-        nebArray[i].pos.x = Windowwidth + i*300;
+        nebArray[i].pos.x = Windowwidth + ((i+1)*300);
         nebArray[i].pos.y = Windowheight - nebArray[i].rec.height;
         nebArray[i].frame = 0;
         nebArray[i].updateTime = 0;
@@ -125,6 +125,13 @@ int main()
     float fgX = 0.0;
 
     bool collision = false; 
+
+    //voices
+    InitAudioDevice();
+    Sound jumpSound = LoadSound("sounds/jump.wav");
+    Sound backSound = LoadSound("sounds/chase.mp3");
+    Sound vicSound = LoadSound("sounds/Pandemia.mp3");
+    PlaySound(backSound);
 
     SetTargetFPS(60); // frame per second
     while(!WindowShouldClose()){
@@ -195,7 +202,7 @@ int main()
         if(IsKeyPressed(KEY_SPACE) && (!isInAir)){
             // this changes the velocity because we have pressd space buttom
             //scarfy is on the ground
-            
+            PlaySound(jumpSound);
             velocity +=jumbVel ;
         }
         
@@ -242,6 +249,7 @@ int main()
         }
         else if(scarfyData.pos.x >= finishLine)
         {
+            PlaySound(backSound);
             DrawText("You Win!", Windowwidth/4, Windowheight/2,30,RED);
         }
         else{
@@ -264,11 +272,17 @@ int main()
         
            
     }
+    UnloadSound(backSound);
+    UnloadSound(vicSound);
+    UnloadSound(jumpSound);
+
     UnloadTexture(nebula);
     UnloadTexture(scarfy);
     UnloadTexture(background);
     UnloadTexture(midground);
-     UnloadTexture(foreground);
+    UnloadTexture(foreground);
+
+    CloseAudioDevice();
     CloseWindow();
 
 }
